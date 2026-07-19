@@ -1,11 +1,9 @@
 import axios from "axios";
 
-const AboutMe = ({ userFavorites, user, setUserFavorites }) => {
-  console.log(userFavorites);
+const Account = ({ userFavorites, user, setUserFavorites }) => {
   const removeFav = async (favId) => {
     const localToken = window.localStorage.getItem("token");
     favId = favId * 1;
-    console.log(favId, typeof favId);
     try {
       await axios.delete(
         `https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/reservations/${favId}`,
@@ -26,6 +24,7 @@ const AboutMe = ({ userFavorites, user, setUserFavorites }) => {
       window.alert(e);
     }
   };
+  console.log(userFavorites);
   return (
     <div>
       <h4>{user.firstname}'s Profile</h4>
@@ -36,7 +35,6 @@ const AboutMe = ({ userFavorites, user, setUserFavorites }) => {
       {userFavorites.length > 0 ? (
         <div>
           {userFavorites.map((favorite) => {
-            console.log(favorite.id);
             return (
               <div key={favorite.id}>
                 <p>{favorite.title}</p>
@@ -62,4 +60,4 @@ const AboutMe = ({ userFavorites, user, setUserFavorites }) => {
   );
 };
 
-export default AboutMe;
+export default Account;

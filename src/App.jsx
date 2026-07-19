@@ -6,7 +6,7 @@ import Book from "./Books/Book";
 import Books from "./Books/Books";
 import Register from "./Auth/Register";
 import Login from "./Auth/Login";
-import AboutMe from "./Auth/AboutMe";
+import Account from "./Auth/Account";
 import Layout from "./Layout/Layout";
 import Error404 from "./Layout/Error404";
 
@@ -22,7 +22,6 @@ function App() {
         const { data } = await axios.get(
           "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/books",
         );
-        console.log(data);
         setBooks(data);
       } catch (e) {
         console.error(e);
@@ -77,7 +76,6 @@ function App() {
           },
         },
       );
-      console.log(data);
       setUserFavorites(data);
     };
     const loggedInToken = window.localStorage.getItem("token");
@@ -115,16 +113,26 @@ function App() {
               />
             }
           />
-          <Route path="/books/:id" element={<Book books={books} />} />
+          <Route
+            path="/book/:id"
+            element={
+              <Book
+                books={books}
+                user={user}
+                setUserFavorites={setUserFavorites}
+                userFavorites={userFavorites}
+              />
+            }
+          />
           <Route
             path="/login"
             element={<Login authenticate={authenticate} />}
           />
           <Route path="/register" element={<Register />} />
           <Route
-            path="/aboutMe"
+            path="/account"
             element={
-              <AboutMe
+              <Account
                 userFavorites={userFavorites}
                 user={user}
                 setUserFavorites={setUserFavorites}

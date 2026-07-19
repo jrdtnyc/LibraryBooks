@@ -8,11 +8,10 @@ const NavBar = ({ user, setToken, setUser }) => {
   };
   return (
     <nav>
-      <NavLink to="/">Home</NavLink>
       <NavLink to="/books">Books</NavLink>
       {user.id ? (
         <span>
-          <NavLink to="/aboutMe">About Me</NavLink>
+          <NavLink to="/account">Account</NavLink>
           <NavLink
             to="/"
             onClick={() => {

@@ -35,10 +35,11 @@ const Books = ({ books, user, setUserFavorites, userFavorites }) => {
         {books.map((book) => {
           return (
             <div key={book.id} className="placeholder">
-              <h2>
-                <NavLink to={`/books/${book.id}`}>{book.name}</NavLink>
-              </h2>
-              <img src={book.coverimage} className="placeholder" />
+              <NavLink to={`/book/${book.id}`}>
+                <h2>{book.title}</h2>
+                <p>{book.id}</p>
+                <img src={book.coverimage} className="placeholder" />
+              </NavLink>
               {user.id ? (
                 <div>
                   {checkFav(book.id) ? (
