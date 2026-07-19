@@ -4,9 +4,11 @@ const AboutMe = ({ userFavorites, user, setUserFavorites }) => {
   console.log(userFavorites);
   const removeFav = async (favId) => {
     const localToken = window.localStorage.getItem("token");
+    favId = favId * 1;
+    console.log(favId, typeof favId);
     try {
       await axios.delete(
-        `https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/reservations/{favId}`,
+        `https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/reservations/${favId}`,
         {
           headers: {
             Authorization: `Bearer ${localToken}`,
@@ -34,6 +36,7 @@ const AboutMe = ({ userFavorites, user, setUserFavorites }) => {
       {userFavorites.length > 0 ? (
         <div>
           {userFavorites.map((favorite) => {
+            console.log(favorite.id);
             return (
               <div key={favorite.id}>
                 <p>{favorite.title}</p>
