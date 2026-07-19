@@ -1,38 +1,141 @@
+import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router";
+import axios from "axios";
+import "./App.css";
+import Book from "./Books/Book";
+import Books from "./Books/Books";
+import Register from "./Auth/Register";
+import Login from "./Auth/Login";
+import AboutMe from "./Auth/AboutMe";
+import Layout from "./Layout/Layout";
+import Error404 from "./Layout/Error404";
+
 function App() {
+  const [user, setUser] = useState({});
+  const [token, setToken] = useState(null);
+  const [userFavorites, setUserFavorites] = useState([]);
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/books",
+        );
+        console.log(data);
+        setBooks(data);
+      } catch (e) {
+        console.error(e);
+        window.alert(e);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const authenticate = async () => {
+    try {
+      if (!window.localStorage.getItem("token")) {
+        throw Error("No token found");
+      }
+      const localToken = window.localStorage.getItem("token");
+      const { data } = await axios.get(
+        "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/users/me",
+        {
+          headers: {
+            Authorization: `Bearer ${localToken}`,
+          },
+        },
+      );
+      setUser(data);
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+      window.alert(e);
+    }
+  };
+
+  useEffect(() => {
+    const checkToken = () => {
+      const loggedInToken = window.localStorage.getItem("token");
+      if (loggedInToken) {
+        setToken(loggedInToken);
+        authenticate();
+      }
+    };
+    checkToken();
+  }, [user.id]);
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const localToken = window.localStorage.getItem("token");
+      const { data } = await axios.get(
+        "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/reservations",
+        {
+          headers: {
+            Authorization: `Bearer ${localToken}`,
+          },
+        },
+      );
+      console.log(data);
+      setUserFavorites(data);
+    };
+    const loggedInToken = window.localStorage.getItem("token");
+    if (loggedInToken) {
+      fetchFavorites();
+    }
+  }, [user.id]);
+
   return (
     <div>
-      <h1>
-        <img id="logo-image" src="books.png" />
-        Library App
-      </h1>
+      <Routes>
+        <Route
+          element={<Layout user={user} setToken={setToken} setUser={setUser} />}
+        >
+          <Route
+            index
+            element={
+              <Books
+                books={books}
+                user={user}
+                setUserFavorites={setUserFavorites}
+                userFavorites={userFavorites}
+              />
+            }
+          />
+          <Route
+            path="/books"
+            element={
+              <Books
+                books={books}
+                user={user}
+                setUserFavorites={setUserFavorites}
+                userFavorites={userFavorites}
+                authenticate={authenticate}
+              />
+            }
+          />
+          <Route path="/books/:id" element={<Book books={books} />} />
+          <Route
+            path="/login"
+            element={<Login authenticate={authenticate} />}
+          />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/aboutMe"
+            element={
+              <AboutMe
+                userFavorites={userFavorites}
+                user={user}
+                setUserFavorites={setUserFavorites}
+              />
+            }
+          />
+          <Route path="*" element={<Error404 />} />
+        </Route>
+      </Routes>
 
-      <p>
-        Complete the React components needed to allow users to browse a library catalog, check out
-        books, log in to their account,
-        <br />
-        log out of their account, review their account, and return books that they've finished
-        reading.
-      </p>
-
-      <p>
-        Recall that React really only cares about state. When our state changes our view changes as
-        well.
-      </p>
-
-      <p>
-        To that end, you may need to use some state in this top-level component in other components
-        by passing them down as a prop.
-      </p>
-      <p>OR</p>
-      <p>
-        Implement context in a way that allows all the components the need to know what's in the
-        context to have access to and be able to consume the right context.
-      </p>
-
-      <p>
-        Don't forget that our URL should dictate our view! Set up React Router to navigate between
-        the different views of your single page application!
-      </p>
+      <hr />
     </div>
   );
 }

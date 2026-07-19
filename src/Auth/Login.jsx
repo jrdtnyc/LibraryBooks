@@ -1,9 +1,6 @@
-import axios from "axios";
 import { useNavigate } from "react-router";
-
-const Login = ({ setToken, authenticate, setError, error }) => {
+const Login = ({ authenticate }) => {
   const navigate = useNavigate();
-
   const login = async (formData) => {
     const email = formData.get("email");
     const password = formData.get("password");
@@ -11,34 +8,30 @@ const Login = ({ setToken, authenticate, setError, error }) => {
       email,
       password,
     };
-
+    console.log(JSON.stringify(user));
+    const storedToken = window.localStorage.getItem("token");
     try {
-      if (!token) throw Error("No token found.");
-
       const response = await fetch(
         "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/users/login",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${storedToken}`,
           },
-          body: JSON.stringify(loginData),
+          body: JSON.stringify(user),
         },
       );
-
-      //console.log(data);
-      window.localStorage.setItem("token", response.token);
-      setToken(response.token);
+      if (!response.ok) throw Error("Authentication failed.");
+      const loginResponse = await response.json();
+      window.localStorage.setItem("token", loginResponse.token);
       authenticate();
-      setError("");
       navigate("/");
-    } catch (error) {
-      console.error(error);
-      setError(error.status);
+    } catch (e) {
+      console.error(e);
+      window.alert(e);
     }
   };
-
   return (
     <div>
       <h4>Please log in!</h4>
@@ -53,8 +46,6 @@ const Login = ({ setToken, authenticate, setError, error }) => {
         </label>
         <button>Login</button>
       </form>
-
-      <div>{error === 401 ? <p>Incorrect Credentials</p> : null}</div>
     </div>
   );
 };

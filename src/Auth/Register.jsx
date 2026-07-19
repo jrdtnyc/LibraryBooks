@@ -1,6 +1,6 @@
-import axios from "axios";
-
+import { useNavigate } from "react-router";
 const Register = () => {
+  const navigate = useNavigate();
   const register = async (formData) => {
     const firstname = formData.get("firstname");
     const lastname = formData.get("lastname");
@@ -18,20 +18,21 @@ const Register = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(regData),
+          body: JSON.stringify(user),
         },
       );
       const result = await response.json();
       console.log(result.token);
       window.localStorage.setItem("token", result.token);
-      setToken(result.token);
-    } catch (error) {
-      console.error(error);
+      navigate("/login");
+    } catch (e) {
+      console.error(e);
+      window.alert(e);
     }
   };
   return (
     <div>
-      <h4>Register Today!</h4>
+      <h4>Sign Up!</h4>
       <form action={register}>
         <label>
           First Name
@@ -54,5 +55,4 @@ const Register = () => {
     </div>
   );
 };
-
 export default Register;
