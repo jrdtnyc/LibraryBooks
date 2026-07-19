@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const Account = ({ userFavorites, user, setUserFavorites }) => {
   const removeFav = async (favId) => {
     const localToken = window.localStorage.getItem("token");

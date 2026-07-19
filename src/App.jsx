@@ -13,7 +13,7 @@ import Error404 from "./Layout/Error404";
 function App() {
   const [user, setUser] = useState({});
   const [token, setToken] = useState(null);
-  const [userFavorites, setUserFavorites] = useState([]);
+  const [userFavorites, setUserFavorites] = useState(0);
   const [books, setBooks] = useState([]);
 
   useEffect(() => {

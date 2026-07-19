@@ -33,7 +33,7 @@ const Login = ({ authenticate }) => {
     }
   };
   return (
-    <div>
+    <div className="login">
       <h4>Please log in!</h4>
       <form action={login}>
         <label>

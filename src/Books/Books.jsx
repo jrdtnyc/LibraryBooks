@@ -28,21 +28,20 @@ const Books = ({ books, user, setUserFavorites, userFavorites }) => {
     });
   };
   return (
-    /*Add CSS to placeholder*/
     <div>
       <h3>There are currently {books.length} Books in inventory</h3>
       <div className="placeholder">
         {books.map((book) => {
           return (
-            <div key={book.id} className="placeholder">
+            <div key={book.id} className="DisplayBooks">
               <NavLink to={`/book/${book.id}`}>
                 <h2>{book.title}</h2>
-                <p>{book.id}</p>
-                <img src={book.coverimage} className="placeholder" />
+
+                <img src={book.coverimage} className="coverimg" />
               </NavLink>
               {user.id ? (
                 <div>
-                  {checkFav(book.id) ? (
+                  {checkFav(book.available) ? (
                     <button disabled={true}>Favorited</button>
                   ) : (
                     <button
